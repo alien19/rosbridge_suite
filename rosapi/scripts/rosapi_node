@@ -88,7 +88,8 @@ class Rosapi(Node):
             full_name = self.get_namespace() + self.get_name()
         else:
             full_name = self.get_namespace() + "/" + self.get_name()
-        params.init(full_name)
+        # params.init(full_name)
+        params._node = self
         self.create_service(Topics, "/rosapi/topics", self.get_topics)
         self.create_service(Interfaces, "/rosapi/interfaces", self.get_interfaces)
         self.create_service(TopicsForType, "/rosapi/topics_for_type", self.get_topics_for_type)
@@ -284,8 +285,8 @@ class Rosapi(Node):
         params.delete_param(request.node_name, request.name, self.globs.params)
         return response
 
-    def get_param_names(self, request, response):
-        response.names = params.get_param_names(self.globs.params)
+    async def get_param_names(self, request, response):
+        response.names = await params.get_param_names(self.globs.params)
         return response
 
     def get_time(self, request, response):
